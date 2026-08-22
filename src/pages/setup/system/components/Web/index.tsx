@@ -53,7 +53,7 @@ export default () => {
 
       <Form form={form} size="large" layout="vertical" onFinish={onSubmit} initialValues={initialValues} className="w-full lg:w-[500px] md:ml-10">
         <Form.Item label="网站名称" name="title" rules={[{ required: true, message: '网站名称不能为空' }]}>
-          <Input placeholder="ThriveX" />
+          <Input placeholder="AquaX" />
         </Form.Item>
 
         <Form.Item label="网站副标题" name="subhead" rules={[{ required: true, message: '网站副标题不能为空' }]}>

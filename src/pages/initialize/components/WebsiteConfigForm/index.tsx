@@ -98,7 +98,7 @@ export default function WebsiteConfigForm({ onSuccess }: InitStepFormProps) {
       onFinish={handleSave}
     >
       <Form.Item label="网站标题" name="title" rules={[{ required: true, message: '请先填写网站标题' }]}>
-        <Input placeholder="例如：ThriveX" />
+        <Input placeholder="例如：AquaX" />
       </Form.Item>
       <Form.Item label="网站副标题" name="subhead">
         <Input placeholder="例如：现代化博客管理系统" />
@@ -116,10 +116,10 @@ export default function WebsiteConfigForm({ onSuccess }: InitStepFormProps) {
         <Input placeholder="例如：Java,前端,Python" />
       </Form.Item>
       <Form.Item label="底部信息" name="footer">
-        <Input placeholder="例如：诚邀贡献者一起共建 ThriveX" />
+        <Input placeholder="例如：诚邀贡献者一起共建 AquaX" />
       </Form.Item>
       <Form.Item label="ICP 备案号" name="icp">
-        <Input placeholder="例如：豫ICP备2020031040号-1" />
+        <Input placeholder="例如：蜀ICP备5201314号-97" />
       </Form.Item>
       <Form.Item label="网站创建时间" name="create_time">
         <DatePicker

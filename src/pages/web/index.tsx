@@ -601,7 +601,7 @@ export default () => {
         <Spin spinning={editLoading}>
           <Form form={form} layout="vertical" size="large" initialValues={link} onFinish={onSubmit}>
             <Form.Item label="网站标题" name="title" rules={[{ required: true, message: '网站标题不能为空' }]}>
-              <Input placeholder="ThriveX" />
+              <Input placeholder="AquaX" />
             </Form.Item>
 
             <Form.Item label="网站描述" name="description" rules={[{ required: true, message: '网站描述不能为空' }]}>

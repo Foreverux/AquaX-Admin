@@ -90,7 +90,7 @@ export default () => {
           path="/login"
           element={
             <>
-              <PageTitle title="ThriveX | 现代化博客管理系统" />
+              <PageTitle title="AquaX | 现代化博客管理系统" />
               <Login />
             </>
           }
@@ -106,7 +106,7 @@ export default () => {
           path="/initialize"
           element={
             <>
-              <PageTitle title="ThriveX - 项目初始化" />
+              <PageTitle title="AquaX - 项目初始化" />
               <SetupInitializePage />
             </>
           }
@@ -125,7 +125,7 @@ export default () => {
             path={path}
             element={
               <>
-                <PageTitle title={`ThriveX - ${title}`} />
+                <PageTitle title={`AquaX - ${title}`} />
                 {element}
               </>
             }

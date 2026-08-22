@@ -123,7 +123,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         <NavLink to="/" className={`flex items-center ${isSideBarTheme === 'dark' ? 'font-bold text-white' : 'font-medium text-[#555]! dark:text-white!'}`}>
           <img src={logo} alt="logo" className="w-8 mr-2.5" />
           <div className="flex flex-col">
-            <span>Thrive X</span>
+            <span>AquaX</span>
             <span className="text-[10px] text-gray-500">现代化 CMS 管理系统</span>
           </div>
         </NavLink>

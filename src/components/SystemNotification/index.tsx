@@ -51,7 +51,7 @@ export default ({ open, onClose }: Props) => {
           </div>
 
           <div className="pt-2">
-            <p className="text-sm text-gray-500 dark:text-gray-400">ThriveX 是一个年轻、高颜值、全开源、永不收费的现代化博客管理系统</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">AquaX 是一个年轻、高颜值、全开源、永不收费的现代化博客管理系统</p>
           </div>
         </div>
       </div>

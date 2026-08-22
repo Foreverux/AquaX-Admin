@@ -62,7 +62,7 @@ export default function InfoCard() {
 
       <div className="relative z-10">
         <h1 className="text-white text-xl font-bold sm:text-2xl">
-          欢迎使用 ThriveX 现代化博客管理系统
+          欢迎使用 AquaX 现代化博客管理系统
         </h1>
 
         <p className="text-white text-sm mt-2 mb-3">

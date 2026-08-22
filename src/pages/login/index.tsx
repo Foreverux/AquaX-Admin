@@ -67,7 +67,7 @@ export default () => {
           <div className="flex justify-center space-x-4 mb-8">
             <img src="/logo.png" alt="" className="w-12 h-12" />
             <div className="flex flex-col">
-              <h1 className="font-bold text-lg text-slate-700">ThriveX</h1>
+              <h1 className="font-bold text-lg text-slate-700">AquaX</h1>
               <p className="text-slate-400 text-sm">现代化博客管理系统</p>
             </div>
           </div>

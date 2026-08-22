@@ -23,7 +23,7 @@ export default function NextActionsGuide({ onSuccess }: InitStepFormProps) {
               初始化配置已全部完成
             </Title>
             <Paragraph className="mb-0! max-w-2xl text-slate-600! dark:text-slate-300!">
-              你已完成 ThriveX 的核心初始化步骤，点击下方“完成”即可进入系统开始使用。
+              你已完成 AquaX 的核心初始化步骤，点击下方“完成”即可进入系统开始使用。
             </Paragraph>
           </div>
         </div>

@@ -168,7 +168,7 @@ export default function SetupInitializePage() {
           <div className="pr-28 md:pr-36">
             <h1 className="text-2xl md:text-3xl font-semibold text-slate-800 dark:text-slate-100">欢迎使用 ThriveX</h1>
             <p className="mt-2 text-sm md:text-base text-slate-500 dark:text-slate-300">
-              接下来将引导您完成 ThriveX 的必要配置，帮助你快速上手
+              接下来将引导您完成 AquaX 的必要配置，帮助你快速上手
             </p>
           </div>
 
