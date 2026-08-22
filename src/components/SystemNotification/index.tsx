@@ -26,7 +26,7 @@ export default ({ open, onClose }: Props) => {
       <div className="py-4">
         <div className="text-center space-y-4">
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">⭐ 喜欢 ThriveX 吗？</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">⭐ 喜欢 AquaX 吗？</h3>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
               如果这个项目对你有帮助，欢迎在 GitHub 上给我们一个 Star！
               <br />
@@ -66,5 +66,7 @@ export const setShowLoginNotification = () => {
 
 // 导出工具函数：检查是否需要显示通知
 export const shouldShowLoginNotification = (): boolean => {
+  // 禁用登录后的系统通知
+  localStorage.setItem(SHOW_NOTIFICATION_KEY, 'false');
   return localStorage.getItem(SHOW_NOTIFICATION_KEY) === 'true';
 };
