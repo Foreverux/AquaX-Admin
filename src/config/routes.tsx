@@ -1,5 +1,5 @@
 import { BiEditAlt, BiFolderOpen, BiHomeSmile, BiSliderAlt, BiCategoryAlt, BiBug, BiBook, BiTrash, BiChip, BiMessageSquareDetail, BiCommentDetail, BiGlobe, BiImage, BiMapPin, BiCog, BiPlug, BiStar } from 'react-icons/bi';
-import { TbBrandAirtable, TbWriting } from 'react-icons/tb';
+import { TbBrandAirtable, TbBrandChrome, TbWriting } from 'react-icons/tb';
 import { FaRegComments, FaInstagram } from 'react-icons/fa';
 import { MdOutlineArticle } from 'react-icons/md';
 import { AiOutlineTags } from 'react-icons/ai';
@@ -91,6 +91,7 @@ export const sidebarRoutes: RouteGroupConfig[] = [
         ),
         icon: <BiBug className="text-lg" />,
       },
+      { path: 'https://www.jiangqingc.top', name: '博客首页', icon: <TbBrandChrome className="text-lg" /> },
     ],
   },
 ];
