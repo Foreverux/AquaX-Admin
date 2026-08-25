@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, Dropdown, Image, Input, message, Modal, Spin, Tooltip } from 'antd';
+import { AutoComplete, Button, Dropdown, Image, Input, message, Modal, Spin, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { BiLogoTelegram, BiLink } from 'react-icons/bi';
 import { FiNavigation } from 'react-icons/fi';
@@ -9,7 +9,7 @@ import { RiDeleteBinLine, RiLoader4Line } from 'react-icons/ri';
 import Material from '@/components/Material';
 import { addRecordDataAPI, editRecordDataAPI, getRecordDataAPI } from '@/api/record';
 import { MOOD_OPTIONS } from '@/constants/mood';
-import { loadGaodeWebKey, resolveLocationAddress } from '@/utils/location';
+import { loadGaodeWebKey, resolveLocationOptions } from '@/utils/location';
 import './index.scss';
 
 export default () => {
@@ -23,6 +23,7 @@ export default () => {
   const [imageList, setImageList] = useState<string[]>([]);
   const [mood, setMood] = useState('');
   const [location, setLocation] = useState('');
+  const [locationOptions, setLocationOptions] = useState<string[]>([]);
   const [locating, setLocating] = useState(false);
   const [gaodeApKey, setGaodeApKey] = useState('');
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
@@ -83,8 +84,6 @@ export default () => {
     if (id) getRecordData();
   }, [id]);
 
-  const reverseGeocode = useCallback(async (lng: number, lat: number) => resolveLocationAddress(lng, lat, gaodeApKey), [gaodeApKey]);
-
   const handleLocate = useCallback(() => {
     if (!navigator.geolocation) {
       message.warning('当前浏览器不支持定位');
@@ -95,9 +94,10 @@ export default () => {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
-          const address = await reverseGeocode(pos.coords.longitude, pos.coords.latitude);
-          if (address) {
-            setLocation(address);
+          const options = await resolveLocationOptions(pos.coords.longitude, pos.coords.latitude, gaodeApKey);
+          if (options.length) {
+            setLocation(options[0]);
+            setLocationOptions(options);
           } else {
             message.warning('未能解析当前位置，请手动输入');
           }
@@ -118,7 +118,7 @@ export default () => {
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 },
     );
-  }, [reverseGeocode]);
+  }, [gaodeApKey]);
 
   useEffect(() => {
     loadGaodeWebKey()
@@ -220,7 +220,7 @@ export default () => {
                 <div className="space-y-5">
                   <div>
                     <div className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-gray-400 dark:text-gray-500">此刻心情</div>
-                    <div className="grid grid-cols-6 gap-2 sm:grid-cols-8 lg:grid-cols-6">
+                    <div className="mood-scroll grid max-h-[200px] grid-cols-6 gap-2 overflow-y-auto sm:grid-cols-8 lg:grid-cols-6">
                       {MOOD_OPTIONS.map((item) => (
                         <Tooltip key={item.emoji} title={item.label}>
                           <button type="button" onClick={() => setMood(mood === item.emoji ? '' : item.emoji)} className={`grid h-11 w-11 place-items-center rounded-2xl text-xl transition-all duration-200 cursor-pointer ${mood === item.emoji ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30 ring-4 ring-blue-100 scale-105 dark:ring-blue-900/50' : 'bg-slate-100 hover:bg-slate-200 hover:scale-105 dark:bg-boxdark-2 dark:hover:bg-slate-700'}`}>
@@ -241,7 +241,15 @@ export default () => {
                         </button>
                       </Tooltip>
                     </div>
-                    <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="如：厦门市 · 环岛路" allowClear className="h-12 rounded-2xl border-slate-200/80 bg-slate-50 px-4 dark:border-strokedark dark:bg-boxdark-2" />
+                    <AutoComplete
+                      value={location}
+                      onChange={(value) => setLocation(value)}
+                      options={locationOptions.map((option) => ({ value: option }))}
+                      allowClear
+                      className="w-full"
+                    >
+                      <Input placeholder="如：厦门市 · 环岛路" className="h-12 rounded-2xl border-slate-200/80 bg-slate-50 px-4 dark:border-strokedark dark:bg-boxdark-2" />
+                    </AutoComplete>
                   </div>
                 </div>
               </section>

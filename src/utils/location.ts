@@ -1,6 +1,15 @@
 import axios from 'axios';
 import { getEnvConfigDataAPI } from '@/api/config';
 
+type AmapRegeocode = {
+  formatted_address?: string;
+  addressComponent?: {
+    province?: string;
+    city?: string | string[];
+    district?: string;
+  };
+};
+
 function formatRegionAddress(province: string, city: string, district?: string) {
   let region = '';
   if (province && city && province !== city) {
@@ -14,20 +23,50 @@ function formatRegionAddress(province: string, city: string, district?: string) 
   return region;
 }
 
-function formatAmapAddress(regeocode: {
-  addressComponent?: {
-    province?: string;
-    city?: string | string[];
-    district?: string;
-  };
-}) {
-  const comp = regeocode.addressComponent;
-  if (!comp) return '';
+// 生成省/市/区的组合：省市区、省市、市区（直辖市等重复层级会自动去重）
+function buildRegionCombinations(province: string, city: string, district: string) {
+  const parts: string[] = [];
+  if (province) parts.push(province);
+  if (city && city !== province) parts.push(city);
+  if (district && district !== city && district !== province) parts.push(district);
 
-  const province = comp.province || '';
-  const city = (Array.isArray(comp.city) ? comp.city[0] : comp.city) || '';
-  const district = comp.district || '';
-  return formatRegionAddress(province, city, district);
+  const options: string[] = [];
+  const push = (value: string) => {
+    const trimmed = value.trim();
+    if (trimmed && !options.includes(trimmed)) options.push(trimmed);
+  };
+
+  // 省 + 市 + 区
+  if (parts.length >= 3) push(parts[0] + parts[1] + parts[2]);
+  // 省 + 市
+  if (parts.length >= 2) push(parts[0] + parts[1]);
+  // 市 + 区
+  if (parts.length >= 2) push(parts[parts.length - 2] + parts[parts.length - 1]);
+
+  return options;
+}
+
+// 拼接高德逆地理编码返回的位置候选：
+// 1. formatted_address（默认）
+// 2. 省/市/区的各种组合
+function buildAmapLocationOptions(regeocode: AmapRegeocode) {
+  const options: string[] = [];
+  const push = (value: string) => {
+    const trimmed = value.trim();
+    if (trimmed && !options.includes(trimmed)) options.push(trimmed);
+  };
+
+  push(regeocode.formatted_address || '');
+
+  const comp = regeocode.addressComponent;
+  if (comp) {
+    const province = comp.province || '';
+    const city = (Array.isArray(comp.city) ? comp.city[0] : comp.city) || '';
+    const district = (Array.isArray(comp.district) ? comp.district[0] : comp.district) || '';
+    buildRegionCombinations(province, city, district).forEach(push);
+  }
+
+  return options;
 }
 
 async function reverseGeocodeByAmap(lng: number, lat: number, key: string) {
@@ -41,10 +80,7 @@ async function reverseGeocodeByAmap(lng: number, lat: number, key: string) {
   });
 
   if (data?.infocode === '10001') return null;
-  if (data.status === '1' && data.regeocode) {
-    const address = formatAmapAddress(data.regeocode);
-    return address || null;
-  }
+  if (data.status === '1' && data.regeocode) return data.regeocode as AmapRegeocode;
   return null;
 }
 
@@ -68,17 +104,22 @@ async function reverseGeocodeByBigDataCloud(lat: number, lng: number) {
   return formatRegionAddress(province, city, district) || null;
 }
 
-export async function resolveLocationAddress(lng: number, lat: number, gaodeKey?: string) {
+// 解析当前位置的候选名称列表，高德优先，失败时降级为 BigDataCloud 单一结果
+export async function resolveLocationOptions(lng: number, lat: number, gaodeKey?: string) {
   if (gaodeKey) {
     try {
-      const amapAddress = await reverseGeocodeByAmap(lng, lat, gaodeKey);
-      if (amapAddress) return amapAddress;
+      const regeocode = await reverseGeocodeByAmap(lng, lat, gaodeKey);
+      if (regeocode) {
+        const options = buildAmapLocationOptions(regeocode);
+        if (options.length) return options;
+      }
     } catch (error) {
       console.warn('高德逆地理编码失败，尝试备用方案', error);
     }
   }
 
-  return reverseGeocodeByBigDataCloud(lat, lng);
+  const address = await reverseGeocodeByBigDataCloud(lat, lng);
+  return address ? [address] : [];
 }
 
 export async function loadGaodeWebKey() {
