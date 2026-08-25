@@ -11,14 +11,18 @@ import NotFound from '../NotFound';
 import { routes } from '@/components/RouteList/route';
 import SetupInitializePage from '@/pages/initialize';
 import { getSystemInitStatusAPI } from '@/api/initialize';
+import Loader from '@/components/Loader';
 
 const INIT_CACHE_KEY = 'thrivex_system_initialized';
 
-const readInitCache = (): boolean => {
+const readInitCache = (): boolean | null => {
   try {
-    return sessionStorage.getItem(INIT_CACHE_KEY) === '1';
+    const cached = sessionStorage.getItem(INIT_CACHE_KEY);
+    if (cached === '1') return true;
+    if (cached === '0') return false;
+    return null;
   } catch {
-    return false;
+    return null;
   }
 };
 
@@ -38,12 +42,13 @@ export default () => {
   useEffect(() => {
     // 如果没有token并且不在登录相关页面就强制跳转到登录页
     if (!store.token && !isLoginRoute) return navigate('/login');
-  }, [store, isLoginRoute]);
+  }, [store.token, isLoginRoute, navigate]);
 
   useEffect(() => {
     // 当 token 变化时，重置检查状态，以便重新检查初始化状态
     hasCheckedInitStatus.current = false;
     hasRedirected.current = false;
+    setProjectInitialized(readInitCache());
   }, [store.token]);
 
   useEffect(() => {
@@ -97,6 +102,10 @@ export default () => {
         />
       </Routes>
     );
+  }
+
+  if (projectInitialized === null) {
+    return <Loader />;
   }
 
   if (!projectInitialized) {

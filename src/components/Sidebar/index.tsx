@@ -15,6 +15,8 @@ interface SidebarProps {
 type SidebarSubMenuItem = SubMenuConfig & { to: string };
 type MenuItem = MenuItemConfig & { to: string; subMenu?: SidebarSubMenuItem[] };
 
+const isExternalUrl = (url: string) => /^https?:\/\//i.test(url);
+
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
@@ -82,6 +84,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   /** 无子菜单的一级项：用真实路由匹配。仪表盘 to 为 /，不能用 path「dashboard」做 includes。 */
   const isTopLevelNavActive = (item: MenuItem) => {
+    if (isExternalUrl(item.to)) {
+      return false;
+    }
+
     if (item.to && item.to !== '#') {
       if (item.to === '/') {
         return pathname === '/' || pathname === '';
@@ -210,10 +216,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   ) : (
                     // 普通导航项
                     <li key={subIndex}>
-                      <NavLink to={item.to} className={sidebarItemClass(isTopLevelNavActive(item))}>
-                        {item.icon}
-                        {item.name}
-                      </NavLink>
+                      {isExternalUrl(item.to) ? (
+                        <a href={item.to} target="_blank" rel="noopener noreferrer" className={sidebarItemClass(false)}>
+                          {item.icon}
+                          {item.name}
+                        </a>
+                      ) : (
+                        <NavLink to={item.to} className={sidebarItemClass(isTopLevelNavActive(item))}>
+                          {item.icon}
+                          {item.name}
+                        </NavLink>
+                      )}
                     </li>
                   ),
                 )}
