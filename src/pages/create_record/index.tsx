@@ -180,7 +180,7 @@ export default () => {
   };
 
   return (
-    <div className="create_record_page min-h-screen overflow-hidden py-6 transition-colors duration-300">
+    <div className="create_record_page min-h-screen py-6 transition-colors duration-300">
       <div className="pointer-events-none fixed inset-0 -z-10" />
 
       <div>
