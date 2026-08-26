@@ -122,7 +122,7 @@ export default function ArticlePage() {
   const web = useWebStore((state) => state.web);
   const [articleList, setArticleList] = useState<Article[]>([]);
   const [total, setTotal] = useState(0);
-  const [filter, setFilter] = useState<ArticleFilterQueryParams>();
+  const [filter, setFilter] = useState<ArticleFilterQueryParams>({ pageNum: 1, pageSize: 8 });
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [cateList, setCateList] = useState<ArticleCate[]>([]);
   const [tagList, setTagList] = useState<ArticleTag[]>([]);
